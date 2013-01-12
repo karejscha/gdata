@@ -140,7 +140,7 @@ module GData
 
       # Performs an HTTP POST with the given bytearray
       def post_bytes(url, bytes, name, mime_type, entry = nil)
-        return self.make_file_request(:post, url, bytes, name, mime_type, entry)
+        return self.make_bytearray_request(:post, url, bytes, name, mime_type, entry)
       end
       
       # Performs an HTTP DELETE against the API.
