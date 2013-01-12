@@ -66,6 +66,21 @@ module GData
         file.close
         return response
       end
+
+      # Sends an HTTP request with the given bytearray as a stream
+      def make_bytearray_request(method, url, bytes, name, mime_type, entry = nil)
+        @headers['Slug'] = name
+        if entry
+          @headers['MIME-Version'] = '1.0'
+          body = GData::HTTP::MimeBody.new(entry, bytes, mime_type)
+          @headers['Content-Type'] = body.content_type
+          response = self.make_request(method, url, body)
+        else
+          @headers['Content-Type'] = mime_type
+          response = self.make_request(method, url, bytes)
+        end
+        return response
+      end
       
       # Sends an HTTP request and return the response.
       def make_request(method, url, body = '')
@@ -121,6 +136,11 @@ module GData
       # Performs an HTTP POST with the given file
       def post_file(url, file_path, mime_type, entry = nil)
         return self.make_file_request(:post, url, file_path, mime_type, entry)
+      end
+
+      # Performs an HTTP POST with the given bytearray
+      def post_bytes(url, bytes, name, mime_type, entry = nil)
+        return self.make_file_request(:post, url, bytes, name, mime_type, entry)
       end
       
       # Performs an HTTP DELETE against the API.
